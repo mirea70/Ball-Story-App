@@ -1,15 +1,13 @@
 import 'package:ballstory_app/common/DeviceInfo.dart';
-import 'package:ballstory_app/view/HomeStadiumView.dart';
-import 'package:ballstory_app/view_model/homestadium/HomeStadiumErrorViewModel.dart';
+import 'package:ballstory_app/model/HomeStadium.dart';
 import 'package:ballstory_app/view_model/homestadium/HomeStadiumViewModel.dart';
 import 'package:ballstory_app/widget/CustomAppBar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widget/CustomAlert.dart';
 import '../widget/CustomButton.dart';
-import '../widget/CustomInput.dart';
+import 'HomeStadiumCreateView3.dart';
 
 class HomeStadiumCreateView2 extends ConsumerStatefulWidget {
   const HomeStadiumCreateView2({super.key});
@@ -25,11 +23,10 @@ class _HomeStadiumCreateView2State
   Widget build(BuildContext context) {
     final homeStadium = ref.watch(homeStadiumNotifierProvider);
 
-    // TODO: implement build
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(step: 2, totalStep: 5),
+        appBar: CustomAppBar(step: 2, totalStep: 3),
         body: LayoutBuilder(
           builder: (context, constraint) {
             return SingleChildScrollView(
@@ -47,7 +44,7 @@ class _HomeStadiumCreateView2State
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '응원하는 구단을 골라주세요!',
+                              '응원팀 설정',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -62,21 +59,324 @@ class _HomeStadiumCreateView2State
                                 color: Colors.grey,
                               ),
                             ),
-                            SizedBox(height: DeviceInfo.size.height * 0.1),
-                            CustomInput(
-                              onChangeMethod: (value) => ref
-                                  .read(homeStadiumNotifierProvider.notifier)
-                                  .setName(value),
-                              hintText: '한화팬부처아니다',
-                              errorText: ref
-                                  .read(homeStadiumCreateErrorProvider.notifier)
-                                  .getNameErrorMsg(),
-                              maxLength: 20,
-                              text: homeStadium.name,
+                            SizedBox(height: DeviceInfo.size.height * 0.03),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_doosan.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '두산',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.DOOSAN,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_lotte.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '롯데',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.LOTTE,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_samsung.jpg',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '삼성',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.SAMSUNG,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_kioom.jpg',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '키움',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.KIWOOM,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_hanhwa.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '한화',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.HANWHA,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_kia.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        '기아',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.KIA,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_kt.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        'KT',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.KT,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_lg.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        'LG',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.LG,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_nc.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        'NC',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.NC,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: DeviceInfo.size.height * 0.02,),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/logo_ssg.png',
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(left: DeviceInfo.size.width * 0.03),
+                                      child: Text(
+                                        'SSG',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: DeviceInfo.size.width * 0.04),
+                                      child: Radio(
+                                        value: Team.SSG,
+                                        groupValue: homeStadium.team,
+                                        onChanged: (Team? value) {
+                                          if(value != null) {
+                                            ref.read(homeStadiumNotifierProvider.notifier,).setTeam(value);
+                                          }
+                                        },
+                                        activeColor: Colors.pinkAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(height: DeviceInfo.size.height * 0.04,),
                       Expanded(child: SizedBox()),
                       Center(
                         child: CustomButton(
@@ -88,7 +388,7 @@ class _HomeStadiumCreateView2State
                               data: (_) => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomeStadiumView(),
+                                  builder: (context) => HomeStadiumCreateView3(),
                                 ),
                               ),
                               error: (error, stackTrace) => showDialog(
@@ -105,9 +405,7 @@ class _HomeStadiumCreateView2State
                             );
                           },
                           title: '다음',
-                          isEnabled: true,
-                          // viewModel.loginName != '' &&
-                          // errorViewModel.getLoginNameError() == null,
+                          isEnabled: homeStadium.team != null,
                         ),
                       ),
                       SizedBox(

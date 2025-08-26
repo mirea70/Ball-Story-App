@@ -23,20 +23,20 @@ class HomeStadiumNotifier extends Notifier<HomeStadium>
 
   void setName(String value) {
     ref.read(homeStadiumCreateErrorProvider.notifier).validateName(value);
-    state.copyWith(name: value);
+    state = state.copyWith(name: value);
   }
 
-  void setTeam(String value) {
+  void setTeam(Team value) {
     try {
-      state.copyWith(team: Team.fromString(value));
+      state = state.copyWith(team: value);
     } catch (_) {
-      ref.read(homeStadiumCreateErrorProvider.notifier).setTeamErrorMsg(value);
+      ref.read(homeStadiumCreateErrorProvider.notifier).setTeamErrorMsg(value.toString());
     }
   }
 
   void setOwnerId(Long value) {
     ref.read(homeStadiumCreateErrorProvider.notifier).validateOwnerId(value);
-    state.copyWith(ownerId: value);
+    state = state.copyWith(ownerId: value);
   }
 
   Future<AsyncValue<void>> validateDuplicatedName() async {

@@ -52,6 +52,6 @@ enum Team {
   final String name;
 
   static Team fromString(String value) {
-    return Team.values.firstWhere((e) => e.name == value);
+    return Team.values.firstWhere((e) => e.toString() == value);
   }
 }

@@ -2,7 +2,6 @@ import 'package:ballstory_app/common/DeviceInfo.dart';
 import 'package:ballstory_app/view_model/homestadium/HomeStadiumErrorViewModel.dart';
 import 'package:ballstory_app/view_model/homestadium/HomeStadiumViewModel.dart';
 import 'package:ballstory_app/widget/CustomAppBar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,11 +24,10 @@ class _HomeStadiumCreateView1State
   Widget build(BuildContext context) {
     final homeStadium = ref.watch(homeStadiumNotifierProvider);
 
-    // TODO: implement build
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(step: 1, totalStep: 5),
+        appBar: CustomAppBar(step: 1, totalStep: 3),
         body: LayoutBuilder(
           builder: (context, constraint) {
             return SingleChildScrollView(
@@ -47,7 +45,7 @@ class _HomeStadiumCreateView1State
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '홈구장명을 입력해주세요.',
+                              '홈구장명 설정',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -67,7 +65,7 @@ class _HomeStadiumCreateView1State
                               onChangeMethod: (value) => ref
                                   .read(homeStadiumNotifierProvider.notifier)
                                   .setName(value),
-                              hintText: '한화팬부처아니다',
+                              hintText: '홈구장명을 입력해주세요.',
                               errorText: ref
                                   .read(homeStadiumCreateErrorProvider.notifier)
                                   .getNameErrorMsg(),
@@ -106,7 +104,7 @@ class _HomeStadiumCreateView1State
                             );
                           },
                           title: '다음',
-                          isEnabled: true,
+                          isEnabled: true, // TODO: 홈구장명 중복 체크
                           // viewModel.loginName != '' &&
                           // errorViewModel.getLoginNameError() == null,
                         ),
