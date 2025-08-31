@@ -70,7 +70,7 @@ class _HomeStadiumCreateView1State
                                   .read(homeStadiumCreateErrorProvider.notifier)
                                   .getNameErrorMsg(),
                               maxLength: 20,
-                              text: homeStadium.name,
+                              text: homeStadium.name ?? '',
                             ),
                           ],
                         ),

@@ -1,3 +1,4 @@
+import 'package:ballstory_app/common/CommonConfig.dart';
 import 'package:ballstory_app/common/DeviceInfo.dart';
 import 'package:ballstory_app/model/HomeStadium.dart';
 import 'package:ballstory_app/view_model/homestadium/HomeStadiumViewModel.dart';
@@ -385,12 +386,46 @@ class _HomeStadiumCreateView2State
                                 .read(homeStadiumNotifierProvider.notifier)
                                 .validateDuplicatedName();
                             validateResult.when(
-                              data: (_) => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeStadiumCreateView3(),
-                                ),
-                              ),
+                              data: (_) {
+                                switch(ref.read(homeStadiumNotifierProvider).team!) {
+                                  case Team.LG:
+                                    CommonConfig.teamColor = Colors.pinkAccent;
+                                    break;
+                                  case Team.HANWHA:
+                                    CommonConfig.teamColor = Colors.orangeAccent;
+                                    break;
+                                  case Team.SAMSUNG:
+                                    CommonConfig.teamColor = Colors.blue;
+                                    break;
+                                  case Team.LOTTE:
+                                    CommonConfig.teamColor = Colors.lightBlue;
+                                    break;
+                                  case Team.KT:
+                                    CommonConfig.teamColor = Colors.black;
+                                    break;
+                                  case Team.KIA:
+                                    CommonConfig.teamColor = Colors.red;
+                                    break;
+                                  case Team.NC:
+                                    CommonConfig.teamColor = Colors.indigo;
+                                    break;
+                                  case Team.KIWOOM:
+                                    CommonConfig.teamColor = Colors.purple;
+                                    break;
+                                  case Team.DOOSAN:
+                                    CommonConfig.teamColor = Colors.indigo;
+                                    break;
+                                  case Team.SSG:
+                                    CommonConfig.teamColor = Colors.redAccent;
+                                    break;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeStadiumCreateView3(),
+                                  ),
+                                );
+                              },
                               error: (error, stackTrace) => showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
