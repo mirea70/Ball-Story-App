@@ -1,43 +1,103 @@
-import 'dart:io';
-
 import 'package:ballstory_app/common/CommonConfig.dart';
+import 'package:ballstory_app/common/DeviceInfo.dart';
+import 'package:ballstory_app/model/Athlete.dart';
+import 'package:ballstory_app/model/HomeStadium.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeStadiumView extends StatelessWidget {
-  const HomeStadiumView({super.key});
+import '../model/HomeStadiumResponse.dart';
+import '../repository/HomeStadiumRepository.dart';
+import '../widget/CustomAlert.dart';
+
+class HomeStadiumView extends ConsumerStatefulWidget {
+  final int stadiumId;
+
+  const HomeStadiumView({super.key, required this.stadiumId});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _HomeStadiumViewState();
+  }
+}
+
+class _HomeStadiumViewState extends ConsumerState<HomeStadiumView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _CustomHeader(),
-            _ReviewCard(),
-            const SizedBox(height: 16),
-            _FavoritePlayer(),
-            const SizedBox(height: 8),
-            // 우선 보류
-            // _SongPlayer(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: _BottomBar(),
-      // floatingActionButtonLocation:
-      //     FloatingActionButtonLocation.miniCenterFloat,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   backgroundColor: Colors.pink[100],
-      //   child: Icon(Icons.add, size: 30, color: Colors.black),
-      // ),
+    return FutureBuilder(
+      future: ref.read(homaStadiumRepositoryProvider).findOne(widget.stadiumId),
+      builder: (BuildContext context, AsyncSnapshot<HomeStadiumResponse> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    _CustomHeader(stadium: snapshot.data!,),
+                    _ReviewCard(), // Todo: 스토리 등록, 목록 조회 화면 구현 후 리펙토링
+                    const SizedBox(height: 16),
+                    _FavoritePlayer(athlete: snapshot.data!.favoriteAthlete,),
+                    const SizedBox(height: 8),
+                    // 우선 보류
+                    // _SongPlayer(),
+                  ],
+                ),
+              ),
+              bottomNavigationBar: _BottomBar(),
+              // floatingActionButtonLocation:
+              //     FloatingActionButtonLocation.miniCenterFloat,
+              // floatingActionButton: FloatingActionButton(
+              //   onPressed: () {},
+              //   backgroundColor: Colors.pink[100],
+              //   child: Icon(Icons.add, size: 30, color: Colors.black),
+              // ),
+            );
+          }
+          else {
+            return CustomAlert(
+              title: snapshot.error.toString(),
+            );
+          }
+        }
+        else {
+          return CircularProgressIndicator();
+        }
+      }
     );
   }
 }
 
 // 상단 Header
 class _CustomHeader extends StatelessWidget {
+  final HomeStadiumResponse stadium;
+
+  const _CustomHeader({required this.stadium});
+
   @override
   Widget build(BuildContext context) {
+    switch (stadium.team) {
+      case Team.LG: CommonConfig.mainLogo = CommonConfig.lgLogo;
+      break;
+      case Team.HANWHA: CommonConfig.mainLogo = CommonConfig.hanhwaLogo;
+      break;
+      case Team.SAMSUNG: CommonConfig.mainLogo = CommonConfig.samsungLogo;
+      break;
+      case Team.LOTTE: CommonConfig.mainLogo = CommonConfig.lotteLogo;
+      break;
+      case Team.KT: CommonConfig.mainLogo = CommonConfig.ktLogo;
+      break;
+      case Team.KIA: CommonConfig.mainLogo = CommonConfig.kiaLogo;
+      break;
+      case Team.NC: CommonConfig.mainLogo = CommonConfig.ncLogo;
+      break;
+      case Team.KIWOOM: CommonConfig.mainLogo = CommonConfig.kioomLogo;
+      break;
+      case Team.DOOSAN: CommonConfig.mainLogo = CommonConfig.doosanLogo;
+      break;
+      case Team.SSG: CommonConfig.mainLogo = CommonConfig.ssgLogo;
+      break;
+    }
+
     return Container(
       height: 50,
       color: Colors.grey[300],
@@ -59,7 +119,7 @@ class _CustomHeader extends StatelessWidget {
               ),
             ),
           ),
-          Text('홈구장명', style: TextStyle(fontSize: 25)),
+          Text(stadium.name ?? '', style: TextStyle(fontSize: 25)),
           Padding(
             padding: const EdgeInsets.only(right: 25),
             child: Icon(Icons.edit, size: 30),
@@ -127,9 +187,10 @@ class _ReviewCard extends StatelessWidget {
 }
 
 // 플레이어 정보
-// TODO: 선수 타입 별로 노출되는 선수성적이 달라짐 (투수, 타자)
-// TODO: 선수 데이터에 따라 이미지, 성적 동적으로 노출하도록 구현 필요
 class _FavoritePlayer extends StatelessWidget {
+  final Athlete athlete;
+  const _FavoritePlayer({required this.athlete});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -179,38 +240,31 @@ class _FavoritePlayer extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Image.asset(
-                    'assets/images/mostlikeplayer_defalt.jpg',
+                  athlete.imageUrl == null
+                  ? Image.asset(
+                    '/assets/images/athlete_default.jpg',
                     width: 150,
                     height: 150,
+                  )
+                  :
+                  Image.network(
+                    athlete.imageUrl!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.fill,
+                    // 로딩/에러 처리
+                    loadingBuilder: (ctx, child, progress) =>
+                    progress == null ? child : const CircularProgressIndicator(),
+                    errorBuilder: (ctx, err, stack) => const Icon(Icons.broken_image),
                   ),
                   SizedBox(height: 5),
-                  Text('폰세', style: TextStyle(fontSize: 20)),
+                  Text(athlete.name, style: TextStyle(fontSize: 20)),
                 ],
               ),
-              SizedBox(
-                height: 150,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      '승패 : 12승 0패',
-                      style: TextStyle(fontSize: 20),
-                      textHeightBehavior: TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                      ),
-                    ),
-                    // SizedBox(height: 5),
-                    Text('ERA : 1.96', style: TextStyle(fontSize: 20)),
-                    // SizedBox(height: 5),
-                    Text('WAR : 5.32', style: TextStyle(fontSize: 20)),
-                    // SizedBox(height: 5),
-                    Text('WHIP : 0.65', style: TextStyle(fontSize: 20)),
-                  ],
-                ),
-              ),
+              SizedBox(width: DeviceInfo.size.width * 0.04,),
+              athlete.type == AthleteType.PITCHER
+              ? _PitcherInfo(athlete: athlete)
+              : _HitterInfo(athlete: athlete)
             ],
           ),
           SizedBox(height: 15),
@@ -358,3 +412,70 @@ class _BottomBar extends StatelessWidget {
     );
   }
 }
+
+class _PitcherInfo extends StatelessWidget {
+  final Athlete athlete;
+
+  const _PitcherInfo({required this.athlete});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            '승패 : ${athlete.win}승 ${athlete.loose}패',
+            style: TextStyle(fontSize: 20),
+            textHeightBehavior: TextHeightBehavior(
+              applyHeightToFirstAscent: false,
+              applyHeightToLastDescent: false,
+            ),
+          ),
+          // SizedBox(height: 5),
+          Text('구원 : ${athlete.hold}홀드 ${athlete.save}세이브', style: TextStyle(fontSize: 20)),
+          // SizedBox(height: 5),
+          Text('ERA : ${athlete.era}', style: TextStyle(fontSize: 20)),
+          // SizedBox(height: 5),
+          Text('WHIP : ${athlete.whip}', style: TextStyle(fontSize: 20)),
+        ],
+      ),
+    );
+  }
+}
+
+class _HitterInfo extends StatelessWidget {
+  final Athlete athlete;
+
+  const _HitterInfo({required this.athlete});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            '타율 : ${athlete.hitAvg == null ? 0.000 : athlete.hitAvg!.toStringAsFixed(3)}',
+            style: TextStyle(fontSize: 20),
+            textHeightBehavior: TextHeightBehavior(
+              applyHeightToFirstAscent: false,
+              applyHeightToLastDescent: false,
+            ),
+          ),
+          // SizedBox(height: 5),
+          Text('안타 : ${athlete.hitCount}', style: TextStyle(fontSize: 20)),
+          // SizedBox(height: 5),
+          Text('홈런 : ${athlete.homeRunCount}', style: TextStyle(fontSize: 20)),
+          // SizedBox(height: 5),
+          Text('타점 : ${athlete.rbi}', style: TextStyle(fontSize: 20)),
+        ],
+      ),
+    );
+  }
+}
+

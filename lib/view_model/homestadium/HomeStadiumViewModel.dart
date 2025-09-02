@@ -1,8 +1,7 @@
-import 'dart:ffi';
-
 import 'package:ballstory_app/model/HomeStadium.dart';
 import 'package:ballstory_app/repository/HomeStadiumRepository.dart';
 import 'package:ballstory_app/view_model/homestadium/HomeStadiumErrorViewModel.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../BaseViewModel.dart';
@@ -35,7 +34,9 @@ class HomeStadiumNotifier extends Notifier<HomeStadium>
     try {
       state = state.copyWith(team: value);
     } catch (_) {
-      ref.read(homeStadiumCreateErrorProvider.notifier).setTeamErrorMsg(value.toString());
+      ref
+          .read(homeStadiumCreateErrorProvider.notifier)
+          .setTeamErrorMsg(value.toString());
     }
   }
 
@@ -43,7 +44,7 @@ class HomeStadiumNotifier extends Notifier<HomeStadium>
     state = state.copyWith(favoriteAthleteCode: value);
   }
 
-  void setOwnerId(Long value) {
+  void setOwnerId(int value) {
     ref.read(homeStadiumCreateErrorProvider.notifier).validateOwnerId(value);
     state = state.copyWith(ownerId: value);
   }
@@ -53,13 +54,12 @@ class HomeStadiumNotifier extends Notifier<HomeStadium>
     return AsyncValue.data(null);
   }
 
-  Future<AsyncValue<void>> register() async {
-    final result = await ref.read(homaStadiumRepositoryProvider).registerHomeStadium(state);
-    if(result != null) {
-      return AsyncValue.error(result['message'], StackTrace.empty);
-    }
-    else {
-      return AsyncValue.data(null);
+  Future<AsyncValue<int>> register() async {
+    try {
+      final result = await ref.read(homaStadiumRepositoryProvider).registerHomeStadium(state);
+      return AsyncValue.data(result);
+    } on DioException catch (e) {
+      return AsyncValue.error(e.response!.data, StackTrace.empty);
     }
   }
 }

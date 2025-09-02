@@ -1,10 +1,10 @@
-import 'dart:ffi';
+
 
 class HomeStadium {
   final String? name;
   final Team? team;
   final int? favoriteAthleteCode;
-  final Long? ownerId;
+  final int? ownerId;
 
   HomeStadium({this.name, this.team, this.favoriteAthleteCode, this.ownerId});
 
@@ -12,7 +12,7 @@ class HomeStadium {
     copyWith(name: null, team: null,   ownerId: null);
   }
 
-  HomeStadium copyWith({String? name, Team? team, int? favoriteAthleteCode, Long? ownerId}) =>
+  HomeStadium copyWith({String? name, Team? team, int? favoriteAthleteCode, int? ownerId}) =>
       HomeStadium(
         name: name ?? this.name,
         team: team ?? this.team,

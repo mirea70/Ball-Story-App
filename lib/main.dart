@@ -32,7 +32,7 @@ class HomeRedirector extends ConsumerWidget {
     return asyncHomeStadium.when(
       data: (exists) {
         if (exists) {
-          return const HomeStadiumView();
+          return const HomeStadiumView(stadiumId: 4,);
         } else {
           return HomeStadiumCreateView1();
         }

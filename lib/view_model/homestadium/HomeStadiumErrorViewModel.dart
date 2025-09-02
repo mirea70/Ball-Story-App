@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:ballstory_app/model/HomeStadiumCreateError.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,7 +40,7 @@ class HomeStadiumCreateErrorNotifier extends Notifier<HomeStadiumCreateError> {
     state.teamError = '$value : 유효하지 않은 프로야구 팀명입니다.';
   }
 
-  void validateOwnerId(Long value) {
+  void validateOwnerId(int value) {
     // TODO: 유효성 규칙 검증 추가
   }
 }

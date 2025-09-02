@@ -223,11 +223,11 @@ class _HomeStadiumCreateView3State
                             onTapMethod: () async {
                               final registerResult = await ref.read(homeStadiumNotifierProvider.notifier).register();
                               registerResult.when(
-                                data: (_) {
+                                data: (int stadiumId) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomeStadiumView(),
+                                      builder: (context) => HomeStadiumView(stadiumId: stadiumId,), // Todo: 회원가입/로그인 구현후 현재 로그인 중인 계정의 ID로 변경
                                     ),
                                   );
                                 },
